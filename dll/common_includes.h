@@ -206,7 +206,7 @@ inline std::string ascii_to_lowercase(std::string data) {
 #define CLIENT_HSTEAMUSER 1
 #define SERVER_HSTEAMUSER 1
 
-#define DEFAULT_NAME "@jackbox_channel"
+define DEFAULT_NAME "@jackbox_channel"
 #define PROGRAM_NAME_1 "Go"
 #define PROGRAM_NAME_2 "ld"
 #define PROGRAM_NAME_3 "be"
