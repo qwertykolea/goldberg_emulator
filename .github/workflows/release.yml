@@ -1,5 +1,6 @@
 ﻿name: Release
 on: push
+ workflow_dispatch:
 jobs:
   build-macos:
     name: Build on macOS
