@@ -212,7 +212,7 @@ uint32 create_localstorage_settings(Settings **settings_client_out, Settings **s
     load_custom_broadcasts(Local_Storage::get_game_settings_path() + "custom_broadcasts.txt", custom_broadcasts);
 
     // Acount name
-char name[32] = "@jackbox_channel";
+char name[32] = "@Jackbox_Pack";
 local_storage->store_data_settings("account_name.txt", name, strlen(name));
 
     // Language
