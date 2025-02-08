@@ -1,6 +1,17 @@
-﻿name: Release
-on: push
- workflow_dispatch:
+name: "Prepare release"
+
+on:
+  push:
+    tags:
+      - "release-*"
+  workflow_dispatch:
+    # allows manual trigger
+
+permissions:
+  contents: "write"
+
+env:
+  THIRD_PARTY_BASE_DIR: "third-party"
 jobs:
   build-macos:
     name: Build on macOS
