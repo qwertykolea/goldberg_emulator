@@ -1,0 +1,111 @@
+name: "Prepare release"
+on:
+  push:
+    tags:
+      - "release-*"
+  workflow_dispatch:
+    # allows manual trigger
+permissions:
+  contents: "write"
+env:
+  THIRD_PARTY_BASE_DIR: "third-party"
+jobs:
+  build-macos:
+    name: Build on macOS
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: CMake configure
+        run: cmake . -Bbuild -DCMAKE_BUILD_TYPE=Release
+      - name: Build
+        run: make -Cbuild -j$(sysctl -n hw.ncpu) steam_api
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: macos-build
+          path: build/
+
+  build-linux:
+    name: Build on Linux
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential
+      - name: CMake configure
+        run: cmake . -Bbuild -DCMAKE_BUILD_TYPE=Release
+      - name: Build
+        run: make -Cbuild steam_api
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: linux-build
+          path: build/
+
+  build-windows:
+    name: Build on Windows
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1
+      - name: Setup CMake
+        uses: jasonj司怀特/setup-cmake@v1
+        with:
+          version: '3.20'
+      - name: CMake configure
+        run: cmake -S . -B build -G "Visual Studio 16 2019" -A x64 -DCMAKE_BUILD_TYPE=Release
+      - name: Build
+        run: cmake --build build --config Release
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: windows-build
+          path: build/
+
+  create-release:
+    needs: [build-macos, build-linux, build-windows]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download macOS artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: macos-build
+          path: macos-build
+      - name: Download Linux artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: linux-build
+          path: linux-build
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: windows-build
+          path: windows-build
+      - name: Create release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ format('{0}', github.event.push.tag || format('release-{0}', toJson(fromJSON(format('"{0}"', format('%Y.%m.%d', github.event.run_started_at))))) ) }}
+          name: Release ${{ format('{0}', github.event.push.tag || format('release-{0}', toJson(fromJSON(format('"{0}"', format('%Y.%m.%d', github.event.run_started_at))))) ) }}
+          files: |
+            macos-build/libsteam_api.dylib
+            macos-build/lobby_connect
+            macos-build/generate_interfaces_file
+            linux-build/libsteam_api.so
+            linux-build/lobby_connect
+            linux-build/generate_interfaces_file
+            windows-build/steam_api64.dll
+            windows-build/lobby_connect.exe
+            windows-build/generate_interfaces_file.exe
