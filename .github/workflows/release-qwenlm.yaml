@@ -4,7 +4,7 @@ on:
     tags:
       - "release-*"
   workflow_dispatch:
-    # allows manual trigger
+    # Allows manual trigger
 permissions:
   contents: "write"
 env:
@@ -61,11 +61,11 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1
       - name: Setup CMake
-        uses: jasonj司怀特/setup-cmake@v1
+        uses: juliangruber/setup-cmake@v1
         with:
-          version: '3.20'
+          version: '3.27'
       - name: CMake configure
-        run: cmake -S . -B build -G "Visual Studio 16 2019" -A x64 -DCMAKE_BUILD_TYPE=Release
+        run: cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -DCMAKE_BUILD_TYPE=Release
       - name: Build
         run: cmake --build build --config Release
       - name: Archive artifacts
@@ -79,17 +79,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download macOS artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: macos-build
           path: macos-build
       - name: Download Linux artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: linux-build
           path: linux-build
       - name: Download Windows artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: windows-build
           path: windows-build
@@ -97,8 +97,8 @@ jobs:
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ format('{0}', github.event.push.tag || format('release-{0}', toJson(fromJSON(format('"{0}"', format('%Y.%m.%d', github.event.run_started_at))))) ) }}
-          name: Release ${{ format('{0}', github.event.push.tag || format('release-{0}', toJson(fromJSON(format('"{0}"', format('%Y.%m.%d', github.event.run_started_at))))) ) }}
+          tag_name: ${{ format('release-{0}', toJson(fromJSON(format('"{0}"', format('%Y.%m.%d', github.event.run_started_at))))) }}
+          name: Release ${{ format('release-{0}', toJson(fromJSON(format('"{0}"', format('%Y.%m.%d', github.event.run_started_at))))) }}
           files: |
             macos-build/libsteam_api.dylib
             macos-build/lobby_connect
