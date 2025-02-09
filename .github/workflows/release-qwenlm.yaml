@@ -23,7 +23,7 @@ jobs:
       - name: Build
         run: make -Cbuild -j$(sysctl -n hw.ncpu) steam_api
       - name: Archive artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: macos-build
           path: build/
@@ -45,7 +45,7 @@ jobs:
       - name: Build
         run: make -Cbuild steam_api
       - name: Archive artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: linux-build
           path: build/
@@ -69,7 +69,7 @@ jobs:
       - name: Build
         run: cmake --build build --config Release
       - name: Archive artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: windows-build
           path: build/
