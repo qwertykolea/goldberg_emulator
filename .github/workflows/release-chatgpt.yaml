@@ -27,7 +27,7 @@ jobs:
       - name: Build
         run: make -Cbuild -j$(sysctl -n hw.ncpu) steam_api
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: macos-artifacts
           path: |
@@ -49,7 +49,7 @@ jobs:
       - name: Build
         run: make -Cbuild -j$(nproc) steam_api
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: linux-artifacts
           path: |
@@ -78,7 +78,7 @@ jobs:
       - name: Build
         run: cmake --build build --config Release
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: windows-artifacts
           path: |
@@ -91,15 +91,15 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build-macos, build-linux, build-windows]
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: macos-artifacts
           path: macos/
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: linux-artifacts
           path: linux/
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: windows-artifacts
           path: windows/
