@@ -31,6 +31,9 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 if (APPLE)
 	set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
 	set(protobuf_BUILD_TESTS CACHE BOOL OFF FORCE)
+#понижаем версию мака
+ set(CMAKE_OSX_DEPLOYMENT_TARGET "12.0")
+
 
 	include(FetchContent)
 	set(FetchContent_Quiet CACHE BOOL OFF FORCE)
