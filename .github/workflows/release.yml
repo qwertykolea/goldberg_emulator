@@ -15,13 +15,13 @@ env:
 jobs:
   build-macos:
     name: Build on macOS
-    runs-on: macos-13
+    runs-on: macos-12
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
       - name: CMake configure
-        run: cmake . -Bbuild -DCMAKE_BUILD_TYPE=Release
+        run: cmake . -Bbuild -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 -DTHREADS_PTHREAD_ARG=ON
       - name: Build
         run: make -Cbuild -j$(sysctl -n hw.ncpu) steam_api
       - name: Create release
