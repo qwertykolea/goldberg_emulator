@@ -22,8 +22,8 @@ jobs:
           submodules: recursive
       - name: CMake configure
         run: cmake . -Bbuild -DCMAKE_BUILD_TYPE=Release
-      - name: Build
-          run: |
+  - name: Build
+    run: |
       SDKROOT=$(xcrun --sdk macosx --show-sdk-path) \
       cmake . -Bbuild \
         -DCMAKE_BUILD_TYPE=Release \
