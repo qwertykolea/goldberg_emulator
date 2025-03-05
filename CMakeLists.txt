@@ -1,9 +1,5 @@
 # Based on: https://github.com/ttroy50/cmake-examples/blob/master/03-code-generation/protobuf/CMakeLists.txt
-cmake_minimum_required(VERSION 3.16)
-
-# я добавил
-set(CMAKE_OSX_DEPLOYMENT_TARGET "10.12" CACHE STRING "" FORCE)
-set(CMAKE_CXX_STANDARD 17)
+cmake_minimum_required(VERSION 3.10)
 
 
 # Set the project name
