@@ -15,7 +15,7 @@ env:
 jobs:
   build-macos:
     name: Build on macOS
-    runs-on: macos-13
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
         with:
@@ -24,7 +24,7 @@ jobs:
         run: cmake . -Bbuild -DCMAKE_BUILD_TYPE=Release
       - name: Build
         run: make -Cbuild -j$(sysctl -n hw.ncpu) steam_api
-- name: Create release
+      - name: Create release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: latest
