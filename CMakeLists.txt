@@ -1,6 +1,12 @@
 # Based on: https://github.com/ttroy50/cmake-examples/blob/master/03-code-generation/protobuf/CMakeLists.txt
 cmake_minimum_required(VERSION 3.24)
 
+# я добавил
+set(CMAKE_OSX_DEPLOYMENT_TARGET "10.12" FORCE)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mmacosx-version-min=10.12")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mmacosx-version-min=10.12")
+
+
 # Set the project name
 project(goldberg_emulator)
 
@@ -31,8 +37,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 if (APPLE)
 	set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
 	set(protobuf_BUILD_TESTS CACHE BOOL OFF FORCE)
-#понижаем версию мака
- set(CMAKE_OSX_DEPLOYMENT_TARGET "10.12")
 
 
 	include(FetchContent)
