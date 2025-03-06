@@ -1,5 +1,7 @@
 # Based on: https://github.com/ttroy50/cmake-examples/blob/master/03-code-generation/protobuf/CMakeLists.txt
 cmake_minimum_required(VERSION 3.10)
+set(CMAKE_OSX_DEPLOYMENT_TARGET "10.12")
+set(CMAKE_OSX_SYSROOT "/Library/Developer/CommandLineTools/SDKs/MacOSX10.12.sdk")
 
 
 # Set the project name
