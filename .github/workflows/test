@@ -1,0 +1,41 @@
+name: Build Goldberg Emulator on macOS 10.12
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: macos-12
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          brew install cmake ninja
+
+      - name: Set up macOS 10.12 SDK
+        run: |
+          sudo mkdir -p /Library/Developer/CommandLineTools/SDKs
+          curl -LO https://old.sdk.url/MacOSX10.12.sdk.tar.xz  # Укажи реальный URL
+          sudo tar -xf MacOSX10.12.sdk.tar.xz -C /Library/Developer/CommandLineTools/SDKs
+
+      - name: Configure CMake
+        run: |
+          cmake -B build -G Ninja \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 \
+            -DCMAKE_OSX_SYSROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX10.12.sdk
+
+      - name: Build project
+        run: cmake --build build --parallel
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: goldberg-emulator-macos
+          path: build/*
