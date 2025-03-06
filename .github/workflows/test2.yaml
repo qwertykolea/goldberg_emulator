@@ -1,14 +1,6 @@
 name: Build for macOS 10.12
 
-on:
-  push:
-    tags:
-      - "release-*"
-  workflow_dispatch:
-    # allows manual trigger
-
-permissions:
-  contents: "write"
+on: [push]
 
 jobs:
   build:
@@ -38,20 +30,13 @@ jobs:
         CXXFLAGS: "-isysroot ${SDKROOT} -mmacosx-version-min=10.12"
         LDFLAGS: "-Wl,-syslibroot,${SDKROOT}"
 
-    - name: CMake configure
-        run: |
+    - name: Build with CMake
+      run: |
         cmake -S . -B build \
               -DCMAKE_OSX_SYSROOT=$SDKROOT \
               -DCMAKE_OSX_DEPLOYMENT_TARGET=10.12
         cmake --build build
-      - name: Build
-        run: make -Cbuild -j$(sysctl -n hw.ncpu) steam_api
-        
-   - name: Create release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: latest
-          files: |
-            build/libsteam_api.dylib
-            build/lobby_connect
-            build/generate_interfaces_file
+
+    - name: Archive build
+      run: |
+        cp -r build/YourApp.app ./artifacts/
