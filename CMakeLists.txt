@@ -39,7 +39,7 @@ if (APPLE)
 	  Protobuf
 	  PREFIX			protobuf
 	  GIT_REPOSITORY    https://github.com/protocolbuffers/protobuf
-	  GIT_TAG           v22.0
+	  GIT_TAG           v30.0
 	  GIT_SUBMODULES	"third_party/abseil-cpp"
 	  GIT_SHALLOW		ON
 	  GIT_PROGRESS		ON
