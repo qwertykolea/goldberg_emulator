@@ -23,15 +23,15 @@ jobs:
         echo "CXXFLAGS=-isysroot ${SDKROOT} -mmacosx-version-min=10.12" >> $GITHUB_ENV
         echo "LDFLAGS=-Wl,-syslibroot,${SDKROOT}" >> $GITHUB_ENV
 
-  - name: CMake configure
-        run: cmake . -Bbuild -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 -DTHREADS_PTHREAD_ARG=ON
+    - name: CMake configure
+      run: cmake . -Bbuild -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 -DTHREADS_PTHREAD_ARG=ON
         
-  - name: Build
-        run: make -Cbuild -j$(sysctl -n hw.ncpu) steam_api
+    - name: Build
+      run: make -Cbuild -j$(sysctl -n hw.ncpu) steam_api
         
-  - name: Create release
-        uses: softprops/action-gh-release@v1
-        with:
+    - name: Create release
+      uses: softprops/action-gh-release@v1
+      with:
           tag_name: latest
           files: |
             build/libsteam_api.dylib
