@@ -15,7 +15,7 @@ jobs:
         curl -LJO https://frtsdsz0ifmt.compat.objectstorage.eu-frankfurt-1.oraclecloud.com/jackbox-json/test/Xcode_9.2.xip
         xip -x Xcode_9.2.xip -d /Applications
         sudo xcode-select -s /Applications/Xcode_9.2.app/Contents/Developer
-        sudo xcodebuild -runFirstLaunch
+        sudo xcodebuild -license accept  # Принятие лицензионного соглашения
 
     - name: Download macOS 10.12 SDK
       run: |
@@ -24,37 +24,35 @@ jobs:
         tar -xJf MacOSX10.12.sdk.tar.xz -C $(xcode-select -p)/SDKs
 
     - name: Set environment variables
-      env:
-        SDKROOT: $(xcode-select -p)/SDKs/MacOSX10.12.sdk
       run: |
+        echo "SDKROOT=$(xcode-select -p)/SDKs/MacOSX10.12.sdk" >> $GITHUB_ENV
         echo "CFLAGS=-isysroot ${SDKROOT} -mmacosx-version-min=10.12" >> $GITHUB_ENV
         echo "CXXFLAGS=-isysroot ${SDKROOT} -mmacosx-version-min=10.12" >> $GITHUB_ENV
         echo "LDFLAGS=-Wl,-syslibroot,${SDKROOT}" >> $GITHUB_ENV
-        echo "PATH=/Applications/Xcode_9.2.app/Contents/Developer/usr/bin:$PATH" >> $GITHUB_ENV
+        echo "PATH=$(xcode-select -p)/usr/bin:$PATH" >> $GITHUB_ENV  # Указываем путь к clang из Xcode 9.2
 
     - name: Install dependencies
       run: |
-        brew install cmake
+        brew install cmake  # Убедимся, что установлен CMake
 
     - name: CMake configure
       run: |
-        cmake \
-          -B build \
+        cmake -B build \
           -DCMAKE_BUILD_TYPE=Release \
           -DCMAKE_OSX_SYSROOT=${SDKROOT} \
           -DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 \
-          -DCMAKE_C_COMPILER=/Applications/Xcode_9.2.app/Contents/Developer/usr/bin/clang \
-          -DCMAKE_CXX_COMPILER=/Applications/Xcode_9.2.app/Contents/Developer/usr/bin/clang++ \
+          -DCMAKE_C_COMPILER=$(xcode-select -p)/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang \
+          -DCMAKE_CXX_COMPILER=$(xcode-select -p)/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ \
           -DTHREADS_PTHREAD_ARG=ON
 
     - name: Build libsteam_api.dylib
       run: |
-        make -C build -j$(sysctl -n hw.ncpu) steam_api
-        ls -l build/libsteam_api.dylib
+        cmake --build build --target steam_api
+        ls -l build/libsteam_api.dylib  # Проверяем, что файл существует
 
     - name: Create release
       uses: softprops/action-gh-release@v1
-      if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+      if: startsWith(github.ref, 'refs/tags/')
       with:
         tag_name: ${{ github.ref_name }}
         token: ${{ secrets.GITHUB_TOKEN }}
