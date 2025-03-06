@@ -38,11 +38,11 @@ jobs:
         CXXFLAGS: "-isysroot ${SDKROOT} -mmacosx-version-min=10.12"
         LDFLAGS: "-Wl,-syslibroot,${SDKROOT}"
 
-  - name: CMake configure
+    - name: CMake configure
         run: cmake . -Bbuild -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_DEPLOYMENT_TARGET=10.12 -DTHREADS_PTHREAD_ARG=ON
       - name: Build
         run: make -Cbuild -j$(sysctl -n hw.ncpu) steam_api
-      - name: Create release
+   - name: Create release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: latest
