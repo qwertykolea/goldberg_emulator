@@ -24,19 +24,21 @@ jobs:
         sudo xcode-select -s /Applications/Xcode_10.1.app/Contents/Developer
 
     - name: Set environment variables
-      env:
-        SDKROOT: $(xcode-select -p)/SDKs/MacOSX10.12.sdk
-        CFLAGS: "-isysroot ${SDKROOT} -mmacosx-version-min=10.12"
-        CXXFLAGS: "-isysroot ${SDKROOT} -mmacosx-version-min=10.12"
-        LDFLAGS: "-Wl,-syslibroot,${SDKROOT}"
+      run: |
+        echo "SDKROOT=$(xcode-select -p)/SDKs/MacOSX10.12.sdk" >> $GITHUB_ENV
+        echo "CFLAGS=-isysroot ${SDKROOT} -mmacosx-version-min=10.12" >> $GITHUB_ENV
+        echo "CXXFLAGS=-isysroot ${SDKROOT} -mmacosx-version-min=10.12" >> $GITHUB_ENV
+        echo "LDFLAGS=-Wl,-syslibroot,${SDKROOT}" >> $GITHUB_ENV
 
     - name: Build with CMake
       run: |
         cmake -S . -B build \
-              -DCMAKE_OSX_SYSROOT=$SDKROOT \
+              -DCMAKE_OSX_SYSROOT=$(xcode-select -p)/SDKs/MacOSX10.12.sdk \
               -DCMAKE_OSX_DEPLOYMENT_TARGET=10.12
         cmake --build build
 
     - name: Archive build
-      run: |
-        cp -r build/YourApp.app ./artifacts/
+      uses: actions/upload-artifact@v4
+      with:
+        name: Goldberg-Emulator-MacOS-10.12
+        path: build/YourApp.app
