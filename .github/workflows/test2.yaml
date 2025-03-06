@@ -44,7 +44,3 @@ jobs:
               -DCMAKE_OSX_SYSROOT=$SDKROOT \
               -DCMAKE_OSX_DEPLOYMENT_TARGET=10.12
         cmake --build build
-
-    - name: Archive build
-      run: |
-        cp -r build/YourApp.app ./artifacts/
