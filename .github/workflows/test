@@ -22,7 +22,7 @@ jobs:
       - name: Set up macOS 10.12 SDK
         run: |
           sudo mkdir -p /Library/Developer/CommandLineTools/SDKs
-          curl -LO https://old.sdk.url/MacOSX10.12.sdk.tar.xz  # Укажи реальный URL
+          curl -LO https://github.com/phracker/MacOSX-SDKs/releases/download/10.13/MacOSX10.12.sdk.tar.xz
           sudo tar -xf MacOSX10.12.sdk.tar.xz -C /Library/Developer/CommandLineTools/SDKs
 
       - name: Configure CMake
