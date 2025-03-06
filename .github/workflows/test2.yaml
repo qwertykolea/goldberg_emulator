@@ -1,0 +1,42 @@
+name: Build for macOS 10.12
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Download macOS 10.12 SDK
+      run: |
+        curl -LJO https://github.com/phracker/MacOSX-SDKs/releases/download/10.13/MacOSX10.12.sdk.tar.xz
+        mkdir -p $(xcode-select -p)/SDKs
+        tar -xJf MacOSX10.12.sdk.tar.xz -C $(xcode-select -p)/SDKs
+
+    - name: Install Xcode 10.1 (if needed)
+      run: |
+        sudo rm -rf /Applications/Xcode_10.1.app
+        curl -LJO https://developer.apple.com/services-account/download?path=Developer_Tools/Xcode_10.1/Xcode_10.1.xip
+        xip -x Xcode_10.1.xip -d /Applications
+        sudo xcode-select -s /Applications/Xcode_10.1.app/Contents/Developer
+
+    - name: Set environment variables
+      env:
+        SDKROOT: $(xcode-select -p)/SDKs/MacOSX10.12.sdk
+        CFLAGS: "-isysroot ${SDKROOT} -mmacosx-version-min=10.12"
+        CXXFLAGS: "-isysroot ${SDKROOT} -mmacosx-version-min=10.12"
+        LDFLAGS: "-Wl,-syslibroot,${SDKROOT}"
+
+    - name: Build with CMake
+      run: |
+        cmake -S . -B build \
+              -DCMAKE_OSX_SYSROOT=$SDKROOT \
+              -DCMAKE_OSX_DEPLOYMENT_TARGET=10.12
+        cmake --build build
+
+    - name: Archive build
+      run: |
+        cp -r build/YourApp.app ./artifacts/
