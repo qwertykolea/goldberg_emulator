@@ -31,8 +31,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 if (APPLE)
 	set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
 	set(protobuf_BUILD_TESTS CACHE BOOL OFF FORCE)
-#понижаем версию мака
- set(CMAKE_OSX_DEPLOYMENT_TARGET "12.0")
 
 
 	include(FetchContent)
@@ -41,7 +39,7 @@ if (APPLE)
 	  Protobuf
 	  PREFIX			protobuf
 	  GIT_REPOSITORY    https://github.com/protocolbuffers/protobuf
-	  GIT_TAG           v30.0
+	  GIT_TAG           v22.0
 	  GIT_SUBMODULES	"third_party/abseil-cpp"
 	  GIT_SHALLOW		ON
 	  GIT_PROGRESS		ON
