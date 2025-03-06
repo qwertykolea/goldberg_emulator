@@ -2,11 +2,13 @@ name: Build Goldberg Emulator on macOS 10.12
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+    tags:
+      - "release-*"
+  workflow_dispatch:
+    # allows manual trigger
+
+permissions:
+  contents: "write"
 
 jobs:
   build:
